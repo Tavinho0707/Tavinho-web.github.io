@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Mi Romántica de Lunes ♥</title>
+    <!-- Vinculación al archivo CSS con su nuevo nombre -->
+    <link rel="stylesheet" href="musica.css">
+</head>
+<body>
+
+<div id="heart-container"></div>
+
+<a href="album.html" class="btn-volver">
+    ← Volver al Álbum
+</a>
+
+<audio id="audio-player"></audio>
+
+<div class="player-container">
+    <div class="album-art" id="cover"></div> 
+        
+    <div class="track-details">
+        <p class="track-title" id="title">Cargando...</p>
+        <p class="track-artist" id="artist">...</p>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-bar-container" id="progress-timeline">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+        <div class="time-details">
+            <span id="current-time">0:00</span>
+            <span id="total-duration">0:00</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="prevTrack()">⏮</button>
+        <button class="btn btn-play" id="play-btn" onclick="togglePlay()">▶</button>
+        <button class="btn" onclick="nextTrack()">⏭</button>
+    </div>
+
+    <div class="dedication-box">
+        <div class="dedication-title">De mi para ti:</div>
+        <span id="dedication">...</span>
+    </div>
+</div>
+
+<script>
+    const playlist = [
+        {
+            title: "ROMÁNTICOS DE LUNES",
+            artist: "Feid",
+            audio: "Musica/romanticos.mp3", 
+            cover: "img/albummornoletemasalaoscuridad.jpg", 
+            dedication: "Te pongo esta canción porque desde que llegaste no puedo dejar de escucharla y pensar en ti. Eres mi romántica de lunes a domingo..."
+        }
+        
+    ];
+
+    let currentIndex = 0;
+    const audio = document.getElementById('audio-player');
+    const playBtn = document.getElementById('play-btn');
+    const progressBar = document.getElementById('progress');
+    const timeline = document.getElementById('progress-timeline');
+    const currentTimeDisplay = document.getElementById('current-time');
+    const totalDurationDisplay = document.getElementById('total-duration');
+
+    function loadTrack(index) {
+        const track = playlist[index];
+        document.getElementById('title').innerText = track.title;
+        document.getElementById('artist').innerText = track.artist;
+        document.getElementById('cover').style.backgroundImage = `url('${track.cover}')`;
+        document.getElementById('dedication').innerText = track.dedication;
+        audio.src = track.audio;
+        
+        currentTimeDisplay.innerText = "0:00";
+        totalDurationDisplay.innerText = "0:00";
+    }
+
+    function togglePlay() {
+        if (audio.paused) {
+            audio.play();
+            playBtn.innerText = "⏸";
+        } else {
+            audio.pause();
+            playBtn.innerText = "▶";
+        }
+    }
+
+    function nextTrack() {
+        currentIndex = (currentIndex + 1) % playlist.length;
+        loadTrack(currentIndex);
+        audio.play();
+        playBtn.innerText = "⏸";
+    }
+
+    function prevTrack() {
+        currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+        loadTrack(currentIndex);
+        audio.play();
+        playBtn.innerText = "⏸";
+    }
+
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    audio.addEventListener('timeupdate', () => {
+        if (audio.duration) {
+            const percentage = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${percentage}%`;
+            currentTimeDisplay.innerText = formatTime(audio.currentTime);
+        }
+    });
+
+    audio.addEventListener('loadedmetadata', () => {
+        totalDurationDisplay.innerText = formatTime(audio.duration);
+    });
+
+    timeline.addEventListener('click', (e) => {
+        if (audio.duration) {
+            const timelineWidth = timeline.clientWidth;
+            const clickX = e.offsetX;
+            const newTime = (clickX / timelineWidth) * audio.duration;
+            audio.currentTime = newTime;
+        }
+    });
+
+    audio.addEventListener('ended', () => {
+        playBtn.innerText = "▶";
+        progressBar.style.width = '0%';
+        currentTimeDisplay.innerText = "0:00";
+    });
+
+    audio.addEventListener('error', () => {
+        console.error('Error al cargar el audio:', audio.error);
+        alert('No se pudo cargar el audio. Revisa que la ruta y el nombre del archivo sean correctos.');
+    });
+
+    // ===== LÓGICA DE CORAZONES =====
+    const heartContainer = document.getElementById('heart-container');
+
+    function createHeart(x, y, emoji, options = {}){
+        const el = document.createElement('div');
+        el.className = 'heart';
+        el.innerText = emoji || '❤️';
+        const size = options.size || (30 + Math.random() * 60);
+        el.style.fontSize = size + 'px';
+        el.style.left = (x - size/2) + 'px';
+        el.style.top = (y - size/2) + 'px';
+        heartContainer.appendChild(el);
+
+        const duration = 5000 + Math.random() * 4000;
+        const drift = (Math.random() * 200) - 100;
+
+        el.animate([
+            { transform: 'translateY(0px) translateX(0px)', opacity: 1 },
+            { transform: `translateY(-120vh) translateX(${drift}px)`, opacity: 0 }
+        ], { duration: duration, easing: 'ease-out' });
+
+        setTimeout(() => { el.remove(); }, duration + 200);
+    }
+
+    // Clic en pantalla genera un corazón y un mensaje emergente
+    heartContainer.addEventListener('click', (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        const hearts = (playlist[currentIndex] && playlist[currentIndex].theme && playlist[currentIndex].theme.hearts) || ['💚','🤍','💖'];
+        const emoji = hearts[Math.floor(Math.random() * hearts.length)];
+        createHeart(x, y, emoji, { size: 48 });
+
+        const msg = document.createElement('div');
+        msg.className = 'message';
+        msg.style.left = (x) + 'px';
+        msg.style.top = (y - 30) + 'px';
+        msg.innerText = '♥';
+        heartContainer.appendChild(msg);
+        setTimeout(() => msg.remove(), 1400);
+    });
+
+    // Corazones aleatorios suaves en segundo plano
+    function spawnRandomHeart(){
+        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+        const x = Math.random() * vw;
+        const y = window.innerHeight + 20; // empieza justo debajo
+        const hearts = (playlist[currentIndex] && playlist[currentIndex].theme && playlist[currentIndex].theme.hearts) || ['💚','🤍','💖'];
+        const emoji = hearts[Math.floor(Math.random() * hearts.length)];
+        createHeart(x, y, emoji, { size: 30 + Math.random() * 40 });
+    }
+
+    let heartAutospawn = setInterval(spawnRandomHeart, 1800);
+    // Opcional: ajustar autospawn al cambiar pista
+    const originalLoadTrack = loadTrack;
+    function loadTrackWithHearts(index){
+        originalLoadTrack(index);
+        // reiniciar autospawn para usar corazones del nuevo tema
+        clearInterval(heartAutospawn);
+        heartAutospawn = setInterval(spawnRandomHeart, 1800);
+    }
+
+    // Reemplazar llamada a loadTrack para usar el wrapper
+    loadTrackWithHearts(currentIndex);
+</script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+:root {
+    --bg-color: #0c0c0c;
+    --card-bg: #121212;
+    --text-main: #ffffff;
+    --text-muted: #b3b3b3;
+    --feid-green: #22c55e;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    background: radial-gradient(circle at center, #1a2a1a 0%, #0c0c0c 100%);
+}
+
+/* Contenedor adaptativo para cualquier pantalla */
+.player-container {
+    background-color: var(--card-bg);
+    width: 90%;
+    max-width: 380px;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(34, 197, 94, 0.2); 
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Carátula responsiva basada en el ancho del contenedor */
+.album-art {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    max-width: 320px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0 auto 25px auto;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.track-details {
+    text-align: left;
+    padding-left: 5px;
+    margin-bottom: 20px;
+}
+
+.track-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 0 5px 0;
+    letter-spacing: -0.5px;
+    word-wrap: break-word;
+}
+
+.track-artist {
+    color: var(--text-muted);
+    font-size: 16px;
+    margin: 0;
+}
+
+.progress-container {
+    margin-bottom: 25px;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 5px;
+    background-color: #333;
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: var(--feid-green);
+    border-radius: 3px;
+    transition: width 0.1s linear;
+}
+
+.time-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    padding: 0 2px;
+    font-variant-numeric: tabular-nums;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.btn {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 28px;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn:hover {
+    color: var(--feid-green);
+    transform: scale(1.1);
+}
+
+.btn-play {
+    font-size: 50px;
+    color: var(--text-main);
+}
+
+.dedication-box {
+    background-color: rgba(34, 197, 94, 0.08);
+    border-left: 4px solid var(--feid-green);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #e0e0e0;
+}
+
+.dedication-title {
+    font-weight: bold;
+    color: var(--feid-green);
+    margin-bottom: 8px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* BOTÓN VOLVER */
+
+.btn-volver{
+    position: fixed;
+    top: 20px;
+    left: 20px;
+
+    text-decoration: none;
+    color: white;
+
+    background: rgba(255,255,255,.12);
+    backdrop-filter: blur(10px);
+
+    padding: 12px 20px;
+
+    border-radius: 999px;
+
+    font-weight: 600;
+
+    transition: .25s;
+
+    border:1px solid rgba(255,255,255,.15);
+
+    z-index:999;
+}
+
+.btn-volver:hover{
+    transform: translateY(-2px);
+    background:#22c55e;
+}
+
+/* ===== Corazones flotantes ===== */
+
+#heart-container{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:1;
+}
+
+.heart{
+    position:absolute;
+    font-size:60px;
+    cursor:pointer;
+    pointer-events:auto;
+    user-select:none;
+    transition:transform .3s;
+    animation:float 8s ease-in-out infinite;
+}
+
+.heart:hover{
+    transform:scale(1.15);
+}
+
+@keyframes float{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-20px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+
+}
+
+.message{
+
+    position:absolute;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    color:white;
+
+    text-shadow:0 0 10px #ff4fd8;
+
+    animation:pop 1.5s forwards;
+
+    pointer-events:none;
+
+}
+
+@keyframes pop{
+
+    0%{
+        opacity:0;
+        transform:scale(.5);
+    }
+
+    30%{
+        opacity:1;
+        transform:scale(1.2);
+    }
+
+    100%{
+        opacity:0;
+        transform:translateY(-40px);
+    }
+
+}
