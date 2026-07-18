@@ -77,14 +77,24 @@ const boton = document.getElementById("musicBtn");
 
 musica.volume = 0.20;
 
-// Empieza con el primer toque en cualquier parte
-document.addEventListener("pointerdown", iniciarMusica, { once: true });
+// Primer clic/tap en la página
+document.addEventListener("click", iniciarMusica, { once: true });
 
 function iniciarMusica() {
-    musica.play().then(() => {
+
+    musica.play()
+    .then(() => {
+
         boton.innerHTML = "♫";
         boton.classList.remove("mute");
-    }).catch(() => {});
+
+    })
+    .catch((error) => {
+
+        console.log("Autoplay bloqueado:", error);
+
+    });
+
 }
 
 boton.addEventListener("click", () => {
